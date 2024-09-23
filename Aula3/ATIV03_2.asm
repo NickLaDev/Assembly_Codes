@@ -28,3 +28,4 @@ TITLE vereficador
 
     ;Comeca as comparacoes e pulos:
     CMP bl,47
+    JA numor
