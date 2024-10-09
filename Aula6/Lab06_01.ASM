@@ -13,37 +13,38 @@ main proc
 
     mov cx,0 ;Inicia o contador como 0
 
-    pega_carac:
+    pega_carac: ; Label para pegar os carac
 
         lea dx,msg1
-        mov ah,9
+        mov ah,9 ;Imprime a MSG1
         int 21h
 
         mov ah,1
-        int 21h
+        int 21h ;Pega caracter
         mov bl,al
 
         cmp bl,0dh
-        je saida_loop
+        je saida_loop ;Verefica se foi digitado CR
         
         inc cx
-        jmp pega_carac
+        jmp pega_carac ;Continua o loop e conta
 
-    saida_loop:
+    saida_loop: ;Label para sair do loop
+
         mov ah,9
-        lea dx,msg2
+        lea dx,msg2 ;Imprime a mensagem 2
         int 21h
 
         lea dx,ast
 
         cmp cx,0
-        je fim
+        je fim ;Vererica se nada foi digitado
     
     imprimir:
 
         int 21h
 
-    loop imprimir
+    loop imprimir ;Loop de imprimir
 
     fim:
 

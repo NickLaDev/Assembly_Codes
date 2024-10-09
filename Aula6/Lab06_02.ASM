@@ -13,37 +13,37 @@ main proc
 
     mov cx,0 ;Inicia o contador como 0
 
-    pega_carac:
+    pega_carac: ;Label para pegar caracter
 
-        inc cx
+        inc cx ;Conta quantos caracters foram digitados
 
         lea dx,msg1
-        mov ah,9
+        mov ah,9 ;Imprime a mensagem 1
         int 21h
 
         mov ah,1
-        int 21h
+        int 21h ;Pega caracter
         mov bl,al
 
         cmp bl,0dh
-        jne pega_carac
+        jne pega_carac ;Ve se CR foi digitado
 
-        dec cx
+        dec cx ;Regulariza cx
 
         mov ah,9
-        lea dx,msg2
+        lea dx,msg2 ;Imprime a mensagem 2
         int 21h
 
         lea dx,ast
 
-        cmp cx,0
+        cmp cx,0 ;Ve se nada foi digitado
         je fim
     
     imprimir:
 
         int 21h
 
-    loop imprimir
+    loop imprimir ;Imprime quantas vezes forem necessarias no loop
 
     fim:
 

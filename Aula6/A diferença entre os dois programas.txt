@@ -1,0 +1,3 @@
+A diferença entre os dois programas consiste em que no primeiro utilizamos um loop do tipo WHILE ( em linguagem de alto nível ), ou seja a verificação
+é feita antes de começar o laço. Já o segundo programa utilizamos um loop do tipo do-while ( em linguagem de alto nível ), ou seja, o programa paça pelo laço
+pelo menos uma vez antes de verificar a condição ( ela é verificada após executar os comandos )
