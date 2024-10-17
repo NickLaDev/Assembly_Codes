@@ -4,7 +4,7 @@ TITLE INVERTE_VETOR
 .data
     MSG1 db 10,13,"Insira os valores do vetor (1 por vez e de 0 a 9) $"
     MSG2 db 10,13,"O vetor inserido foi: $"
-    MSG3 db 10,13,"O vetor invertido eh: $"
+    MSG3 db 10,13,"O vetor invertido eh: $" ;Cria todas as variáveis e mensagens para o programa
     vetor db 7 DUP(?)
 
 .code
@@ -13,10 +13,7 @@ TITLE INVERTE_VETOR
     mov ax,@data
     mov ds,ax ;Libera acesso ao data
 
-    ;xor cx,cx ;Limpa cx
-    ;mov cx,7 ;Inicializa cx com o tamanho do vetor
-
-    xor si,si
+    xor si,si ;Limpa si
 
     pegaVetor:
         
@@ -37,8 +34,8 @@ TITLE INVERTE_VETOR
     mov ah,9 ;Imprime a mensagem 2:
     int 21h
 
-    xor si,si
-    mov ah,2
+    xor si,si ;Limpa si
+    mov ah,2 ;Função 2 do int 21h
 
     imprime_Vetor:
 
@@ -49,39 +46,36 @@ TITLE INVERTE_VETOR
         cmp si,6
         jbe imprime_Vetor ;Compara ate rodar 6 vezes, imprimindo todo vetor
 
-        cmp cx,1
-        je fim ;Compara para ver se está na hora de encerrar o programa
+        cmp cx,1 ;Compara cx com 1 para indicar que é para encerar o programa
+        je fim ;Vai para o fim
 
     xor si,si
-    xor dx,dx ;Limpa dx e si
+    xor di,di ;Limpa os indexs
 
-    push_Vetor:
+    mov di,6
+    xor dx,dx ;Limpa dx e coloca di na ultima posição do vetor
 
-        mov dl, vetor[si]
-        push dx ;Joga os valores do vetor para a pilha
-        inc si ;Vai para a próxima posição do vetor
+    inverte_Vetor:
 
-        cmp si,6
-        jbe push_Vetor ;Roda 6 vezes para jogar todos os valores do vetor
+        mov dl,vetor[si]
+        mov dh,vetor[di]
 
-    xor si,si
-    xor dx,dx
+        mov vetor[si],dh
+        mov vetor[di],dl ;Inverte as posições do vetor por registradores
 
-    pop_Vetor :
+        inc si
+        dec di ;Passa para as próximas posições do vetor
 
-        pop dx ;Tira os valores da pilha e joga no vetor, e, pelo funcionamento da pilha, já nos dá o vetor invertido
-        mov vetor[si],dl
-        inc si ;Vai para a próxima posição de si, e assim, do vetor
+        cmp si,3
+        jbe inverte_Vetor ;Ve se já passou por todas posições do vetor
 
-        cmp si,6
-        jbe pop_Vetor ;Roda 6 vezes para passar por todas posições do vetor
 
     xor si,si
     xor dx,dx ;Limpa dx e si
 
     lea dx, msg3
-    mov ah,9 ;Imprime a mensagem 3
-    int 21h
+    mov ah,9
+    int 21h ;Imprime a mensagem 3
 
     mov ah,2
     mov cx,1
