@@ -73,7 +73,7 @@ TITLE PROJETO BATALHA NAVAL
     TAB MACRO N                 ;Macro feita para dar TAB (dar espaco da lateral) na tela de saida.
         PUSH AX
         PUSH BX
-        PUSH CX
+        PUSH CX 
         PUSH DX
         
         MOV AH, 3
