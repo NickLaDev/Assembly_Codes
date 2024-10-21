@@ -22,165 +22,247 @@ endm
 .stack 100h
 .data
     ;---------------------------MENSAGENS_DE_INTRODUCAO-------------------------------------------------------------------------------------------;
-    MSGINTRO1         db "Bem vindo ao jogo de batalha naval! $"
-    MSGINTRO2         db "Regras para jogar: $"
-    MSGINTRO3         db "Terao de ser inseridos 1 encouracado, 1 fragata, 2 submarinos e 2 hidroavioes $"
-    MSGINTRO4         db "Encourada -> Ocupa 4 posicoes em linha reta $"
-    MSGINTRO5         db "Fragata -> 3 posicoes em linha reta $"
-    MSGINTRO6         db "Submarino -> 2 posicoes em linha reta $"
-    MSGINTRO7         db "Hidroaviao -> 3 posicoes em linha reta e uma na horizonta no meio dessas $"
-    MSGINTRO8         db "O jogador deve posicionar cada embarcacao com uma distancia de uma casa minima entra elas em todos os sentidos $"
-    MSGINTRO9         db "Ganha quem acertar o todos os navios do openente $"
-    quebra_Linha      db 10,13,"$"
+    MSGINTRO1                  db "Bem vindo ao jogo de batalha naval! $"
+    MSGINTRO2                  db "Regras para jogar: $"
+    MSGINTRO3                  db "Terao de ser inseridos 1 encouracado, 1 fragata, 2 submarinos e 2 hidroavioes $"
+    MSGINTRO4                  db "Encourada -> Ocupa 4 posicoes em linha reta $"
+    MSGINTRO5                  db "Fragata -> 3 posicoes em linha reta $"
+    MSGINTRO6                  db "Submarino -> 2 posicoes em linha reta $"
+    MSGINTRO7                  db "Hidroaviao -> 3 posicoes em linha reta e uma na horizonta no meio dessas $"
+    MSGINTRO8                  db "O jogador deve posicionar cada embarcacao com uma distancia minima de uma casa $"
+    MSGINTRO9                  db "Ganha quem acertar o todos os navios do openente $"
+    MSGINTRO10                 db "Pressione qualquer tecla para continuar! $"
+
+    quebra_Linha               db 10,13,"$"
+    ;------------------------------------------Mensagens-------------------------------------------------------------------------------------------------;
+    MSGPEGARNOME               db "Digite o seu nome: $"
     ;--------------------------------------Declaracao das matrizes que serao utilizadas como tabuleiro-------------------------------------------------------------------------------------;
-    matriz_Jogador    db 10 dup (10 dup (0))
-    matriz_Adversario db 10 dup (10 dup(0))
-            
+    matriz_Jogador             db 10 dup (10 dup (0))
+    matriz_Adversario          db 10 dup (10 dup(0))
+    matriz_Controle_Jogador    db 10 dup (10 dup (0))
+    matriz_Controle_Adversario db 10 dup (10 dup (0))
+    colunas                    db "[1] [2] [3] [4] [5] [6] [7] [8] [9] [10] $"
+    colunas2                   db "1  2  3  4  5  6  7  8  9  10 $"
+    linhas                     db "A  B  C  D  E  F  G  H  I  J $"
+    ;--------------------------------------Variaveis de ambiente-------------------------------------------------------------------------------------------------------------------;
+
+    nome_Jogador               db 15 dup (?)
+
+    ;-----------------------------------------------------------------------------------------------------------------------------------------------------------------;
 .code
 
 main proc
 
-                        mov     ax,@data
-                        mov     ds,ax                  ;Libera acesso ao .DATA
+                            mov     ax,@data
+                            mov     ds,ax                      ;Libera acesso ao .DATA
 
     ;------------------------------------------------------TELA_INCIAL--------------------------------------------------------------------------;
 
-                        call    limpa_Tela
+                            call    limpa_Tela
 
-                        move_XY 25,0                   ;Coloca o cursor no centro da tela
+                            move_XY 25,0                       ;Coloca o cursor no centro da tela
 
-                        call    imprimir_Introducao
+                            call    imprimir_Introducao        ;Imprime a introdução e fica travado até apertar alguma tecla
+
+                            call    limpa_Tela                 ;Limpa tela apos sair da proc de cima
+
+                            call    pega_Nome                  ;Pega o nome do jogador
+
+                            call    limpa_Tela                 ;Limpa a tela
+
+                            call    posiciona_Navios           ;Começa a posiconar os navios
     
     ;---------------------------------FIM_DO_PROGRAMA--------------------------------------------------------------------------------------;
     
-                        jmp     fim
+                            jmp     fim
 
     ;--------------------------------Procedimentos:----------------------------------------------------------------------------------------;
     
-limpa_Tela proc                                        ;Procedimento que limpa a tela:
+limpa_Tela proc                                                ;Procedimento que limpa a tela:
 
-                        push    ax
-                        push    bx
-                        push    cx
-                        push    dx
+                            push    ax
+                            push    bx
+                            push    cx
+                            push    dx
 
-                        MOV     AH,0
-                        MOV     AL,3
-                        INT     10H
+                            MOV     AH,0
+                            MOV     AL,3
+                            INT     10H
 
-                        pop     dx
-                        pop     cx
-                        pop     bx
-                        pop     ax
+                            pop     dx
+                            pop     cx
+                            pop     bx
+                            pop     ax
 
-                        ret
+                            ret
 
 
 limpa_Tela endp
 
                 
     ;------------------------------------------------------------------------------------------------------------------------------------;
-imprime_Letras proc                                    ;Procedimento para impressao de caracters
+imprime_Letras proc                                            ;Procedimento para impressao de caracters
     ;Necessário enviar BL e si ( BL = cor e si = endereço do caracter )
 
-                        push    ax
-                        push    bx
-                        push    cx
-                        push    dx
+                            push    ax
+                            push    bx
+                            push    cx
+                            push    dx
 
-                        MOV     BH, 00h                ; Número da página de vídeo (geralmente 00h)
+                            MOV     BH, 00h                    ; Número da página de vídeo (geralmente 00h)
 
 
-    impressao_Loop:     
+    impressao_Loop:         
 
-                        mov     al,[si]
-                        MOV     AH, 09h                ; Função para escrever caractere e atributo
-                        MOV     CX, 1                  ; Número de vezes para escrever o caractere
-                        INT     10h                    ; Chama a interrupção de vídeo
+                            mov     al,[si]
+                            MOV     AH, 09h                    ; Função para escrever caractere e atributo
+                            MOV     CX, 1                      ; Número de vezes para escrever o caractere
+                            INT     10h                        ; Chama a interrupção de vídeo
 
-                        mov     ah,3                   ;dh=linha dl=coluna
-                        int     10h
-                        inc     dl
-                        mov     ah,2
-                        int     10h
+                            mov     ah,3                       ;dh=linha dl=coluna
+                            int     10h
+                            inc     dl
+                            mov     ah,2
+                            int     10h
 
-                        inc     si
-                        mov     dl,[si]
-                        cmp     dl,"$"
-                        jnz     impressao_Loop
+                            inc     si
+                            mov     dl,[si]
+                            cmp     dl,"$"
+                            jnz     impressao_Loop
 
-                        call    pula_Linha
+                            call    pula_Linha
 
-                        pop     dx
-                        pop     cx
-                        pop     bx
-                        pop     ax
+                            pop     dx
+                            pop     cx
+                            pop     bx
+                            pop     ax
 
-                        ret
+                            ret
 
 imprime_Letras endp
 
+imprime_Letras_Vertical proc
+
+
+
+
+                            ret
+
+imprime_Letras_Vertical endp
+
 pula_Linha proc
 
-                        push    ax
-                        push    bx
-                        push    cx
-                        push    dx
+                            push    ax
+                            push    bx
+                            push    cx
+                            push    dx
 
-                        mov     ah,9
-                        lea     dx,quebra_Linha
-                        int     21h
+                            mov     ah,9
+                            lea     dx,quebra_Linha
+                            int     21h
 
-                        pop     dx
-                        pop     cx
-                        pop     bx
-                        pop     ax
+                            pop     dx
+                            pop     cx
+                            pop     bx
+                            pop     ax
 
-                        ret
+                            ret
 pula_Linha endp
 
 imprimir_Introducao proc
 
-                        MOV     BL, 0ch                ; Atributo de cor (0ch = texto vermelho)
-                        lea     si,msgintro1
-                        call    imprime_Letras
+                            MOV     BL, 0ch                    ; Atributo de cor (0ch = texto vermelho)
+                            lea     si,msgintro1
+                            call    imprime_Letras
 
-                        call    pula_Linha
+                            call    pula_Linha
 
-                        MOV     BL, 0eh                ; Atributo de cor (0Eh = texto amarelo)
-                        lea     si,msgintro2
-                        call    imprime_Letras
+                            MOV     BL, 0eh                    ; Atributo de cor (0Eh = texto amarelo)
+                            lea     si,msgintro2
+                            call    imprime_Letras
 
-                        call    pula_Linha
+                            call    pula_Linha
 
-                        lea     si,msgintro3
-                        call    imprime_Letras
+                            lea     si,msgintro3
+                            call    imprime_Letras
 
-                        lea     si,msgintro4
-                        call    imprime_Letras
+                            lea     si,msgintro4
+                            call    imprime_Letras
 
-                        lea     si,msgintro5
-                        call    imprime_Letras
+                            lea     si,msgintro5
+                            call    imprime_Letras
 
-                        lea     si,msgintro6
-                        call    imprime_Letras
+                            lea     si,msgintro6
+                            call    imprime_Letras
 
-                        lea     si,msgintro7
-                        call    imprime_Letras
+                            lea     si,msgintro7
+                            call    imprime_Letras
 
-                        lea     si,msgintro8
-                        call    imprime_Letras
+                            lea     si,msgintro8
+                            call    imprime_Letras
 
-                        lea     si,msgintro9
-                        call    imprime_Letras
+                            lea     si,msgintro9
+                            call    imprime_Letras
 
-                        ret
+                            mov     bl,0bh
+                            ADD     BL,128                     ;Faz ficar piscando
+                            lea     si,msgintro10
+                            move_XY 22,12
+                            call    imprime_Letras
+
+                            mov     ah,1
+                            int     21h
+
+
+                            ret
 
 imprimir_Introducao endp
 
-    fim:                
-                        mov     ah,4ch
-                        int     21h
+pega_Nome proc
+
+                            move_XY 30,5
+                            lea     si,MSGPEGARNOME
+                            mov     bl,0ah
+                            call    imprime_Letras
+
+                            mov     ah,1
+                            lea     si,nome_Jogador
+                            move_XY 36,6
+    loop_Letras:            
+
+                            int     21h
+                            cmp     al,13
+                            je      fim_Loop
+                            mov     [si],al
+                            inc     si
+                            jmp     loop_Letras
+
+                        
+    fim_Loop:               
+                            mov     bx,"$"
+                            mov     [si],bx
+
+                            ret
+
+pega_Nome endp
+
+posiciona_Navios proc
+
+                            move_XY 35,5
+                            lea     si,colunas
+                            mov     bl,2h
+                            call    imprime_Letras
+
+                            move_XY 32,7
+                            lea     si,linhas
+                            call    imprime_Letras_Vertical
+                            ret
+
+posiciona_Navios endp
+
+    fim:                    
+                            mov     ah,4ch
+                            int     21h
 
 
 main endp
