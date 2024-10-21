@@ -44,6 +44,9 @@ endm
     colunas                    db "[1] [2] [3] [4] [5] [6] [7] [8] [9] [10] $"
     colunas2                   db "1  2  3  4  5  6  7  8  9  10 $"
     linhas                     db "A  B  C  D  E  F  G  H  I  J $"
+    DIV_1                      DB 218,196,196,196,194,196,196,196,194,196,196,196,194,196,196,196,194,196,196,196,194,196,196,196,194,196,196,196,194,196,196,196,194,196,196,196,194,196,196,196,191,"$"    ;Usando codigos ASCII para impressao
+    DIV_2                      DB 192,196,196,196,193,196,196,196,193,196,196,196,193,196,196,196,193,196,196,196,193,196,196,196,217,10,13,"$"                                                              ;das matrizes utilizadas no jogo
+    DIV_3                      DB 195,196,196,196,197,196,196,196,197,196,196,196,197,196,196,196,197,196,196,196,197,196,196,196,180,10,13,"$"
     ;--------------------------------------Variaveis de ambiente-------------------------------------------------------------------------------------------------------------------;
 
     nome_Jogador               db 15 dup (?)
@@ -60,15 +63,15 @@ main proc
 
                             call    limpa_Tela
 
-                            move_XY 25,0                       ;Coloca o cursor no centro da tela
+    ;move_XY 25,0                       ;Coloca o cursor no centro da tela
 
-                            call    imprimir_Introducao        ;Imprime a introdução e fica travado até apertar alguma tecla
+    ;call    imprimir_Introducao        ;Imprime a introdução e fica travado até apertar alguma tecla
 
-                            call    limpa_Tela                 ;Limpa tela apos sair da proc de cima
+    ;call    limpa_Tela                 ;Limpa tela apos sair da proc de cima
 
-                            call    pega_Nome                  ;Pega o nome do jogador
+    ;call    pega_Nome                  ;Pega o nome do jogador
 
-                            call    limpa_Tela                 ;Limpa a tela
+    ;call    limpa_Tela                 ;Limpa a tela
 
                             call    posiciona_Navios           ;Começa a posiconar os navios
     
@@ -122,15 +125,15 @@ imprime_Letras proc                                            ;Procedimento par
                             mov     ah,3                       ;dh=linha dl=coluna
                             int     10h
                             inc     dl
-                            mov     ah,2
+                            mov     ah,2                       ;Passa o curso uma posicao para o lado
                             int     10h
 
                             inc     si
                             mov     dl,[si]
                             cmp     dl,"$"
-                            jnz     impressao_Loop
+                            jnz     impressao_Loop             ;Compara para ver se já terminou a string
 
-                            call    pula_Linha
+                            call    pula_Linha                 ;Passa para a próxima linha dps da impressao
 
                             pop     dx
                             pop     cx
@@ -143,8 +146,40 @@ imprime_Letras endp
 
 imprime_Letras_Vertical proc
 
+    ;Necessário enviar BL e si ( BL = cor e si = endereço do caracter )
+
+                            push    ax
+                            push    bx
+                            push    cx
+                            push    dx
+
+                            MOV     BH, 00h                    ; Número da página de vídeo (geralmente 00h)
 
 
+    impressao_Loop_Vertical:
+
+                            mov     al,[si]
+                            MOV     AH, 09h                    ; Função para escrever caractere e atributo
+                            MOV     CX, 1                      ; Número de vezes para escrever o caractere
+                            INT     10h                        ; Chama a interrupção de vídeo
+
+                            mov     ah,3                       ;dh=linha dl=coluna
+                            int     10h
+                            inc     dh
+                            mov     ah,2                       ;Passa o curso uma posicao para o lado
+                            int     10h
+
+                            inc     si
+                            mov     dl,[si]
+                            cmp     dl,"$"
+                            jnz     impressao_Loop_Vertical    ;Compara para ver se já terminou a string
+
+                            call    pula_Linha                 ;Passa para a próxima linha dps da impressao
+
+                            pop     dx
+                            pop     cx
+                            pop     bx
+                            pop     ax
 
                             ret
 
@@ -255,7 +290,13 @@ posiciona_Navios proc
 
                             move_XY 32,7
                             lea     si,linhas
+                            mov     bl,3h
                             call    imprime_Letras_Vertical
+
+                            move_XY 34,6
+                            lea     si,div_1
+                            call    imprime_Letras
+
                             ret
 
 posiciona_Navios endp
