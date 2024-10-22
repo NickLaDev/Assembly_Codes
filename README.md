@@ -1,8 +1,3 @@
-Parece que o problema está ocorrendo devido ao uso dos caracteres de crase (```````) para marcar blocos de código no README.md. Quando não fechamos corretamente ou há um erro de sintaxe, isso pode fazer com que o conteúdo seguinte seja interpretado como texto comum.
-
-Aqui está a correção completa sem o uso de blocos de código mal formatados. Para listar pastas e arquivos no README.md, podemos apenas formatar o texto sem usar blocos de código se necessário.
-
-Segue a versão atualizada:
 
 # 💻 Projetos em Assembly 8086 - MASM/TASM
 
@@ -102,11 +97,3 @@ Durante o desenvolvimento dos projetos, foram utilizadas as seguintes referênci
 👨‍💻 Colaborador
 
 	•	Nicolas Laredo - Desenvolvedor dos códigos e autor das explicações dos exercícios.
-
-📄 Licença
-
-Este projeto está sob a licença MIT. Consulte o arquivo LICENSE para mais detalhes.
-
-### Ajustes feitos:
-
-1. **Remoção de blocos de código**: Para garantir que o `README.md` não perca a formatação, organizei a listagem de pastas e arquivos de forma que o Markdown interprete corretamente sem o uso de blocos de
