@@ -1,32 +1,42 @@
 .MODEL SMALL 
-.DATA 
-    VETOR DB  1, 1, 1, 2, 2, 2 ; Cria vetor de 6 posições
-.CODE 
-MAIN PROC 
+.DATA
+        VETOR DB 1, 1, 1, 2, 2, 2        ; Cria vetor de 6 posições
+.CODE
+MAIN PROC
 
-        MOV AX, @DATA 
-        MOV DS,AX ;Libera acesso ao data
+                    MOV  AX, @DATA
+                    MOV  DS,AX                ;Libera acesso ao data
 
-        XOR DL, DL ;Limpa DL
+                    XOR  DL, DL               ;Limpa DL
 
-        MOV CX,6 ;Inicializa o contador como 6
+                    call imprime_Vet
+      
+                    MOV  AH,4CH
+                    INT  21H                  ;saida para o DOS
 
-        XOR BX, BX ;Limpa BX
 
-VOLTA:    
+imprime_Vet proc
 
-        MOV DL, VETOR[BX] ;Acessa o vetor na posição que BX está
-        INC BX ;Vai para a próxima posição do vetor
+                    MOV  CX,6                 ;Inicializa o contador como 6
 
-        ADD DL, 30H 
-        MOV AH, 02 
-        INT 21H ;Imprime o vetor na posição desejada
+                    XOR  BX, BX               ;Limpa BX
 
-        LOOP VOLTA ;Loop ate cx ser 0
+        VOLTA:      
 
-        MOV AH,4CH 
-        INT 21H             ;saida para o DOS 
-MAIN ENDP 
+                    MOV  DL, VETOR[BX]        ;Acessa o vetor na posição que BX está
+                    INC  BX                   ;Vai para a próxima posição do vetor
+
+                    ADD  DL, 30H
+                    MOV  AH, 02
+                    INT  21H                  ;Imprime o vetor na posição desejada
+
+                    LOOP VOLTA                ;Loop ate cx ser 0
+
+                    ret
+imprime_Vet endp
+
+
+MAIN ENDP
         END MAIN
 
         ;A diferença do programa A para B é quem em A utilizamos BX para armazenar o endereço de memória do vetor
