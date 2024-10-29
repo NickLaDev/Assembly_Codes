@@ -25,9 +25,11 @@ main proc
                      sub  al,30h              ;Transforma no numero absoluto
 
                      mov  dl,al               ;Dl tem o numero que acabou de ser digitado
+
                      mov  ax,valor
                      mov  bl,10
                      mul  bl                  ; multiplica al por bx e salva em ax
+                     
                      add  ax,dx               ;Salva o novo numero
                      mov  valor,ax
 

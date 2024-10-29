@@ -8,12 +8,12 @@ title contagem de vogais
 main proc
 
                      mov  ax,@data
-                     mov  ds,ax
+                     mov  ds,ax               ;Libera acesso a memoria
 
 
-                     call pega_Vetor
+                     call pega_Vetor          ;Chama a função para pegar a string
 
-                     lea  si,vetor
+                     lea  si,vetor            ;Passa o endereço da string para si
                    
                      xor  ax,ax
                      mov  cx,20
