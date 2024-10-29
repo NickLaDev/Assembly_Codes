@@ -2,14 +2,13 @@ title contagem de vogais
 .model small
 .data
     vetor  db 20 dup (?)
-    vogais db 61h,65h,69h,6fh,75h
+    vogais db "a","e","i","o","u"
 .code
 
 main proc
 
                      mov  ax,@data
                      mov  ds,ax               ;Libera acesso a memoria
-
 
                      call pega_Vetor          ;Chama a função para pegar a string
 
@@ -21,13 +20,13 @@ main proc
     loop_Vetor:      
                      push cx
                      mov  cx,5
-                     mov  dx,[si]
+                     mov  dl,[si]
                      lea  di,vogais
 
     loop_Vogais:     
 
-                     mov  bx,[di]
-                     cmp  dx,bx
+                     mov  bl,[di]
+                     cmp  dl,bl
                      je   vogal_Encontrada
                      inc  di
 
