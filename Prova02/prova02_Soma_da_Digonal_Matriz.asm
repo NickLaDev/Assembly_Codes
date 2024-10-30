@@ -11,7 +11,6 @@ main proc
 
                         call pega_Matriz
 
-
                         call soma_Diagonal          ;Bx esta com a soma
 
                         call imprime_Soma
