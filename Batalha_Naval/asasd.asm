@@ -1,4 +1,3 @@
-
 title teste de impressao
 .model small
 
@@ -758,7 +757,7 @@ imprime_Posicao proc
                                       cmp              byte ptr [si],2                           ;Verificar esse SI -> SI tem q ser offset matriz_Jogador + P ataque
                                       je               posicao_correta
 
-                                      move_XY          2,8
+                                      move_XY          bl,dl
 
                                       xor              ax,ax
                                       mov              ah,2
@@ -770,7 +769,7 @@ imprime_Posicao proc
 
     posicao_correta:                  
 
-                                      move_XY          2,8
+                                      move_XY          bl,dl
 
                                       xor              ax,ax
                                       mov              ah,2
@@ -2005,7 +2004,7 @@ vez_Do_Pc proc
 
                                       call             imprime_Tabuleiro
 
-                                      call             imprime_Posicoes_Atacadas                 ;Mudar si para Matriz_Controle_Adversario
+                                      call             imprime_Posicoes_Atacadas_Al              ;Mudar si para Matriz_Controle_Adversario
 
                                       move_XY          30,1
 
@@ -2030,13 +2029,11 @@ vez_Do_Pc proc
                                       lea              si,matriz_Controle_Adversario
                                       call             imprime_posicoes_atacadas_Al              ;Ok
 
+
                                       call             imrprime_Acertou_Errou_Al                 ;OK
 
-                                      lea              si,matriz_Controle_Adversario
-                                      call             imprime_posicoes_atacadas_Al              ;Ok
-
-                                      mov              ah,1
-                                      int              21h
+                                      
+                                     
 
     ; Verificar se derrubou um barco inteiro
     ;Verificar se atacou todas as posicoes

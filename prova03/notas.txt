@@ -1,0 +1,55 @@
+indexação matrizes:
+-matriz[bx][si]
+bx -> Numero da linha - 1
+si -> numero da coluna ( tem que considerar quantos elementos tem na linha pois:)
+
+matriz = offset inicial
+offset inicial + bx + si ( ai para si ser as coluna tem que ser o numero de linhas -1)
+
+----------------------------------------------------------------------------------------------
+
+comandos de strings/vetores:
+
+MOVSB/MOVSW -> MOVe uma posicao de um vetor para outro de si para di
+               atualiza sozinho si e di para proxima posicao
+
+CMPSB/CMPSW -> Compara duas posicoes de um vetor
+             Compara si com di
+             salva em zf o resultado
+             1 = igual
+             0 = diferente
+             atualiza sozinho si e di 
+
+             obs: comandos repe -> repete o comando até achar um elemento igual no cmpsb
+             atualiza si e di
+
+STOSB/STOSW -> "store"
+
+            Salva o valor de al (sb) ou ax (sw) na posicao de di
+            atualiza di
+
+LODSB/LODSW -> "load"
+
+            salva o que tem em si em al/ax
+            atualiza sozinho si
+
+SCASB/SCASW -> "scan"
+
+            procura um valor na posicao de memoria apontada por um vetor em di
+            atualiza zf com o valor e atualiza di
+            compara com al ou ax
+        
+
+REP -> repete enquanto cx > 0 
+
+repe -> repete enquanto comparacao igual e cx > 0
+
+repne -> repete até comparacao ser igual e cx > 0 
+
+obs -> repetem um comando
+
+CLD E STD - mexem na direction flag 
+
+cld - clear = 0 = incrementa si e di
+
+std - set = 1 = decrementam si e di 
